@@ -16,7 +16,7 @@ Resources:
       Handler: app.handler
       Environment:
         Variables:
-          EMAIL_TO: "AAQIBHAMDULE@YAHOO.COM"
+          EMAIL_TO: "aaqibhamdule@yahoo.com"
           EMAIL_FROM: "hamduleaaqib.aws@gmail.com"
       Policies:
         - Statement:
@@ -29,7 +29,7 @@ Resources:
         DailySchedule:
           Type: Schedule
           Properties:
-            Schedule: "rate(5 minutes)"  # For testing purposes; change to "cron(30 4 * * ? *)" for 10 AM IST
+            Schedule: "cron(30 4 * * ? *)"
             Name: Daily10amIST
             Description: "Trigger Lambda every day at 10 AM IST"
 
