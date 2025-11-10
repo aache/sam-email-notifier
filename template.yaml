@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Daily email notification Lambda at 10 AM IST
+
+Globals:
+  Function:
+    Timeout: 10
+    Runtime: nodejs18.x
+
+Resources:
+  DailyEmailFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: daily-email-notifier
+      CodeUri: src/
+      Handler: app.handler
+      Environment:
+        Variables:
+          EMAIL_TO: "AAQIBHAMDULE@YAHOO.COM"
+          EMAIL_FROM: "hamduleaaqib.aws@gmail.com"
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - ses:SendEmail
+                - ses:SendRawEmail
+              Resource: "*"
+      Events:
+        DailySchedule:
+          Type: Schedule
+          Properties:
+            Schedule: "cron(30 4 * * ? *)"
+            Name: Daily10amIST
+            Description: "Trigger Lambda every day at 10 AM IST"
+
+Outputs:
+  LambdaFunctionName:
+    Value: !Ref DailyEmailFunction
