@@ -1,8 +1,10 @@
-import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+// src/app.js  (CommonJS)
+const { SESClient, SendEmailCommand } = require("@aws-sdk/client-ses");
 
-const client = new SESClient({ region: "ap-south-1" }); // 👈 change to your SES region
+const client = new SESClient({ region: process.env.AWS_REGION || "ap-south-1" });
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
+  console.log("Triggered at", new Date().toISOString());
   const to = process.env.EMAIL_TO;
   const from = process.env.EMAIL_FROM;
 
@@ -11,20 +13,18 @@ export const handler = async (event) => {
   const params = {
     Destination: { ToAddresses: [to] },
     Message: {
-      Body: {
-        Text: { Data: `Good morning Aaqib!\n\nThis is your daily 10 AM reminder.\n\nTime: ${date}` },
-      },
-      Subject: { Data: "🌅 Daily 10 AM Notification" },
+      Body: { Text: { Data: `Good morning Aaqib!\n\nThis is your daily test.\n\nTime: ${date}` } },
+      Subject: { Data: "Daily 10 AM Notification (test)" },
     },
     Source: from,
   };
 
   try {
     const result = await client.send(new SendEmailCommand(params));
-    console.log("✅ Email sent:", result.MessageId);
-    return { statusCode: 200, body: "Email sent successfully" };
+    console.log("Email sent, MessageId:", result.MessageId);
+    return { statusCode: 200, body: "Email sent" };
   } catch (err) {
-    console.error("❌ Error sending email:", err);
-    return { statusCode: 500, body: "Failed to send email" };
+    console.error("Error sending email:", err);
+    throw err;
   }
 };

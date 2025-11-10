@@ -29,7 +29,7 @@ Resources:
         DailySchedule:
           Type: Schedule
           Properties:
-            Schedule: "cron(30 4 * * ? *)"
+            Schedule: "rate(5 minutes)"  # For testing purposes; change to "cron(30 4 * * ? *)" for 10 AM IST
             Name: Daily10amIST
             Description: "Trigger Lambda every day at 10 AM IST"
 
